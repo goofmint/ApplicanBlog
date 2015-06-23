@@ -1,0 +1,690 @@
+
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>アプリカンブログ</title>
+  
+  <subtitle>HTML5でiOS/Androidアプリが開発できるプラットフォーム、アプリカンのブログです。</subtitle>
+  
+  <link href="http://tech-blog.applican.com/"/>
+  <updated>2015-05-28T12:57:24+09:00</updated>
+  <author>
+    <name>moongift</name>
+  </author>
+  <generator uri="http://blog.hatena.ne.jp/" version="4901df8618e1dfedb291af509b4bd30c">Hatena::Blog</generator>
+  <id>hatenablog://blog/8454420450075341309</id>
+
+  
+    
+    <entry>
+        <title>リモート/ローカルプッシュの違いを知ろう</title>
+        <link href="http://tech-blog.applican.com/entry/2015/05/12/100000"/>
+        <id>hatenablog://entry/8454420450092174083</id>
+        <published>2015-05-12T10:00:00+09:00</published>
+        <updated>2015-05-12T10:00:11+09:00</updated>
+        <summary type="html">プッシュ通知と言うと、一般的に外部のサーバからスマートフォン、タブレットに届くものと思いがちです。 しかしプッシュ通知にはもう一つの仕組みがあります。それがローカルプッシュ通知です。 ローカルプッシュ通知とは？ ローカルプッシュ通知とはスマートフォンやタブレットアプリだけで完結するプッシュ通知になります。サーバサイドは使いません。 予めアプリ側でトリガーを仕掛けておき、そのタイミングになったところでリモートからのプッシュ通知と同じようにアラートが表示されます。 ローカルプッシュ通知の使い方 例えばアプリカンの場合、5秒後に通知を出すとしたら以下のように設定します。 function local…</summary>
+        <content type="html">&lt;p&gt;プッシュ通知と言うと、一般的に外部のサーバからスマートフォン、タブレットに届くものと思いがちです。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421140830.png&quot; alt=&quot;f:id:moongift:20150421140830p:plain&quot; title=&quot;f:id:moongift:20150421140830p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;しかしプッシュ通知にはもう一つの仕組みがあります。それがローカルプッシュ通知です。&lt;/p&gt;
+
+&lt;h2&gt;ローカルプッシュ通知とは？&lt;/h2&gt;
+
+&lt;p&gt;ローカルプッシュ通知とはスマートフォンやタブレットアプリだけで完結するプッシュ通知になります。サーバサイドは使いません。&lt;/p&gt;
+
+&lt;p&gt;予めアプリ側でトリガーを仕掛けておき、そのタイミングになったところでリモートからのプッシュ通知と同じようにアラートが表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421140838.png&quot; alt=&quot;f:id:moongift:20150421140838p:plain&quot; title=&quot;f:id:moongift:20150421140838p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;h2&gt;ローカルプッシュ通知の使い方&lt;/h2&gt;
+
+&lt;p&gt;例えば&lt;a href=&quot;http://doc.applican.com/LocalNotification/index.html&quot;&gt;アプリカンの場合&lt;/a&gt;、5秒後に通知を出すとしたら以下のように設定します。&lt;/p&gt;
+
+&lt;pre class=&quot;code&quot; data-lang=&quot;&quot; data-unlink&gt;function localNotificationSchedule1(){       //5秒後
+    var now = parseInt((new Date)/1000);
+    var options = {
+        alertId: 1,
+        alertBody: &amp;#34;message1&amp;#34;,
+        uri: &amp;#34;http://www.yahoo.co.jp/&amp;#34;,
+        fireDate: now+5,
+        //repeatInterval: &amp;#34;&amp;#34;,
+        alertAction: &amp;#34;開く&amp;#34;,              //iOSのみ
+        applicationIconBadgeNumber: 3,          //iOSのみ
+    };
+    applican.localNotification.schedule(localNotificationSchedule1Success, localNotificationSchedule1Error, options);
+}
+// スケジュール登録完了
+function localNotificationSchedule1Success(){
+    var dump = &amp;#34;localNotificationSchedule1Success\n&amp;#34;;
+    document.getElementById(&amp;#34;dumpAreaLocalNotification&amp;#34;).value =dump;
+}
+// スケジュール登録失敗
+function localNotificationSchedule1Error(res){
+    var dump = &amp;#34;localNotificationSchedule1Error\n&amp;#34;;
+    dump += &amp;#34;code:&amp;#34;+res.code+&amp;#34;\n&amp;#34;;
+    document.getElementById(&amp;#34;dumpAreaLocalNotification&amp;#34;).value =dump;
+}&lt;/pre&gt;
+
+
+&lt;p&gt;現在時刻に5秒足す形になっていますので、任意の時刻を指定してスケジュール登録することが可能です。&lt;/p&gt;
+
+&lt;h2&gt;ローカルプッシュ通知の使い道&lt;/h2&gt;
+
+&lt;p&gt;ローカルということは自分宛のプッシュ通知しか飛ばせません。そのため、リマインダーなど時間をトリガーにしたアクションに対して通知を出すというのが一般的です。&lt;/p&gt;
+
+&lt;p&gt;例えばゲームのライフ回復や、無料マンガアプリでの通知などにも使われているようです。&lt;/p&gt;
+
+&lt;p&gt;時間をトリガーにしない場合として、iBeaconやPassbookもローカル通知の仕組みを使っています。これらの技術は位置情報やBLEをトリガーにしています。&lt;/p&gt;
+
+&lt;h2&gt;利点&lt;/h2&gt;
+
+&lt;p&gt;利点の一つとして、オフラインでも通知できると言うことが挙げられます。リモートからのプッシュ通知ではネットワークに繋がっていなければいけませんが、ローカルプッシュ通知の場合はネットワークは不要です。&lt;/p&gt;
+
+&lt;p&gt;またローカルなのでデバイストークンの管理も不要で、手軽に使えるのが良さと言えそうです。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;ローカルプッシュ通知は自分宛に出すプッシュ通知なので、ユーザメリットの高いメッセージを飛ばすのが重要です。リモートプッシュ通知と合わせて使いこなしてください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://doc.applican.com/LocalNotification/index.html&quot;&gt;LocalNotification | アプリカン | アプリ開発支援プラットフォーム&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+        
+        <category term="iBeacon" label="iBeacon" />
+        
+        <category term="プッシュ通知" label="プッシュ通知" />
+        
+        <category term="アプリカン" label="アプリカン" />
+        
+
+        <author>
+            <name>moongift</name>
+        </author>
+    </entry>
+    
+  
+    
+    <entry>
+        <title>ApplicanアプリのデバッグにGapDebugを使ってみよう</title>
+        <link href="http://tech-blog.applican.com/entry/2015/05/08/100000"/>
+        <id>hatenablog://entry/8454420450092163308</id>
+        <published>2015-05-08T10:00:00+09:00</published>
+        <updated>2015-05-08T10:00:18+09:00</updated>
+        <summary type="html">CordovaやPhoneGapといったハイブリッドアプリのデバッグに使えるGapDebugというソフトウェアがあります。 クロスプラットフォームで動作し、iOS/Androidの両方がサポートされていますのでWindowsでiOSアプリをデバッグすることができます。 基本はPhoneGap/Cordova用なのですが、試してみたところApplicanアプリでも使えることが分かりました。これで生産性が大幅に向上できそうです。 注意点 注意点として、Applicanシミュレータでは使えません。一度ビルドした上で実機にインストールしたApplicanアプリが対象です。また、これは非公式な方法になり…</summary>
+        <content type="html">&lt;p&gt;CordovaやPhoneGapといったハイブリッドアプリのデバッグに使えるGapDebugというソフトウェアがあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421112505.png&quot; alt=&quot;f:id:moongift:20150421112505p:plain&quot; title=&quot;f:id:moongift:20150421112505p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;クロスプラットフォームで動作し、iOS/Androidの両方がサポートされていますのでWindowsでiOSアプリをデバッグすることができます。&lt;/p&gt;
+
+&lt;p&gt;基本はPhoneGap/Cordova用なのですが、試してみたところApplicanアプリでも使えることが分かりました。これで生産性が大幅に向上できそうです。&lt;/p&gt;
+
+&lt;h2&gt;注意点&lt;/h2&gt;
+
+&lt;p&gt;注意点として、Applicanシミュレータでは使えません。一度ビルドした上で実機にインストールしたApplicanアプリが対象です。また、これは非公式な方法になりますので将来的な保証がある訳ではありませんのでご注意ください。&lt;/p&gt;
+
+&lt;h2&gt;GapDebugのダウンロード&amp;amp;インストール&lt;/h2&gt;
+
+&lt;p&gt;GapDebugは&lt;a href=&quot;https://www.genuitec.com/products/gapdebug/&quot;&gt;公式サイト&lt;/a&gt;よりダウンロードできます。WindowsまたはMac OSX版が選択できます。&lt;/p&gt;
+
+&lt;p&gt;インストールはウィザードに沿って行いますので特に迷うことはないと思います。&lt;/p&gt;
+
+&lt;h2&gt;GapDebugの起動&lt;/h2&gt;
+
+&lt;p&gt;GapDebugを起動すると、接続されているiOS/Androidデバイスが左側に表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421112527.png&quot; alt=&quot;f:id:moongift:20150421112527p:plain&quot; title=&quot;f:id:moongift:20150421112527p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;さらにその状態でApplicationアプリを起動します。Hello Worldというアプリが認識されたのが分かります。これをクリックすると、右側にGoogle ChromeのDevTools風のデバッガーが表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421112540.png&quot; alt=&quot;f:id:moongift:20150421112540p:plain&quot; title=&quot;f:id:moongift:20150421112540p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;こんな感じでHTMLソースを見ることができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421112550.png&quot; alt=&quot;f:id:moongift:20150421112550p:plain&quot; title=&quot;f:id:moongift:20150421112550p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;ブレークポイントを仕込んで変数の中身を見ることもできます。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421112600.png&quot; alt=&quot;f:id:moongift:20150421112600p:plain&quot; title=&quot;f:id:moongift:20150421112600p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;ステップ実行も可能です。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150421/20150421112610.png&quot; alt=&quot;f:id:moongift:20150421112610p:plain&quot; title=&quot;f:id:moongift:20150421112610p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;h2&gt;使えるのは開発版のみ&lt;/h2&gt;
+
+&lt;p&gt;Applicanアプリといっても使えるのは開発用ビルドしたものだけになります。App Storeを使って配布しているアプリはデバッグできませんのでご注意ください。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;GapDebugを使えば一旦ビルドして実機にインストールしてしまえば、後は管理画面でweb.zipをアップロードし、アプリ内のコンテンツを差し替えてといった具合に開発サイクルを高速化できそうです。ぜひお試しください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.genuitec.com/products/gapdebug/&quot;&gt;GapDebug :: Mobile App Debugger&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.applican.com/&quot;&gt;アプリカン | アプリ開発支援プラットフォーム&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+        
+        <category term="iOS" label="iOS" />
+        
+        <category term="Android" label="Android" />
+        
+        <category term="開発" label="開発" />
+        
+        <category term="アプリカン" label="アプリカン" />
+        
+
+        <author>
+            <name>moongift</name>
+        </author>
+    </entry>
+    
+  
+    
+    <entry>
+        <title>INFOSOUND™の提供する非可聴音による情報発信とは？</title>
+        <link href="http://tech-blog.applican.com/entry/2015/05/01/100000"/>
+        <id>hatenablog://entry/8454420450090843412</id>
+        <published>2015-05-01T10:00:00+09:00</published>
+        <updated>2015-05-01T10:16:55+09:00</updated>
+        <summary type="html">Applican 1.12ではヤマハ株式会社の提供するINFOSOUND™に対応しました。INFOSOUND™とは非可聴音を使った情報発信技術になります。そこで今回はINFOSOUND™の技術の概略と、その使い方を紹介したいと思います。 非可聴音とは？ 非可聴音とは読んで字のごとく、人間の耳には聞こえない領域の音になります。非可聴音は人間には聞こえませんが、スマートフォンのマイクには届けられます。 情報発信とは 非可聴音が聞こえる範囲に対応アプリが入ることで、それをトリガーにして情報発信ができるようになります。非可聴音を発するスピーカー自体はネットワークに接続されておらず、その音に含まれるID…</summary>
+        <content type="html">&lt;p&gt;Applican 1.12では&lt;a href=&quot;http://jp.yamaha.com/products/soundsignage/infosound/&quot;&gt;ヤマハ株式会社の提供するINFOSOUND™&lt;/a&gt;に対応しました。INFOSOUND™とは非可聴音を使った情報発信技術になります。そこで今回はINFOSOUND™の技術の概略と、その使い方を紹介したいと思います。&lt;/p&gt;
+
+&lt;h2&gt;非可聴音とは？&lt;/h2&gt;
+
+&lt;p&gt;非可聴音とは読んで字のごとく、人間の耳には聞こえない領域の音になります。非可聴音は人間には聞こえませんが、スマートフォンのマイクには届けられます。&lt;/p&gt;
+
+&lt;h2&gt;情報発信とは&lt;/h2&gt;
+
+&lt;p&gt;非可聴音が聞こえる範囲に対応アプリが入ることで、それをトリガーにして情報発信ができるようになります。非可聴音を発するスピーカー自体はネットワークに接続されておらず、その音に含まれるID情報をINFOSOUND™のサーバで検証します。そしてID情報が正しいものであると検証した上で、必要な処理をアプリ側で実行します。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150408/20150408153158.jpg&quot; alt=&quot;f:id:moongift:20150408153158j:plain&quot; title=&quot;f:id:moongift:20150408153158j:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;スピーカー自体は特別なものではなく、市販のスピーカーが利用できます（上の写真のように専用スピーカーもあります。アプリカンとの連携ではこの専用スピーカーを用います）。そこにIDを付与した特別な音（非可聴音）を流すことでINFOSOUND™デバイスにすることができます。しかも別な音源と組み合わせることもできますので、BGMを流しつつ非可聴音を流すといった方法も可能です。&lt;/p&gt;
+
+&lt;h2&gt;利用可能距離&lt;/h2&gt;
+
+&lt;p&gt;スピーカーが発する音が届く範囲になりますが、おおよそ5mになります。また音波なので壁などを越えることはできず、限定的な空間における利用が可能です。&lt;/p&gt;
+
+&lt;h2&gt;iBeacon/ビーコンとの違い&lt;/h2&gt;
+
+&lt;p&gt;気になるのはやはりiBeaconとの相違点ではないかと思います。ざっとまとめると以下のようになります。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;          &lt;/th&gt;
+&lt;th&gt;iBeacon                    &lt;/th&gt;
+&lt;th&gt;INFOSOUND™&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;必要な技術&lt;/td&gt;
+&lt;td&gt;BLE(Bluetooth Low Enegy)   &lt;/td&gt;
+&lt;td&gt;マイク    &lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;距離      &lt;/td&gt;
+&lt;td&gt;最大50m                    &lt;/td&gt;
+&lt;td&gt;約5m      &lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;壁        &lt;/td&gt;
+&lt;td&gt;通過                       &lt;/td&gt;
+&lt;td&gt;通過しない&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;指向性    &lt;/td&gt;
+&lt;td&gt;なし                       &lt;/td&gt;
+&lt;td&gt;あり      &lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;ネットワーク&lt;/td&gt;
+&lt;td&gt;不要                     &lt;/td&gt;
+&lt;td&gt;必要      &lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;バックグラウンド&lt;/td&gt;
+&lt;td&gt;対応                 &lt;/td&gt;
+&lt;td&gt;非対応    &lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+&lt;h2&gt;向いている利用法&lt;/h2&gt;
+
+&lt;p&gt;スピーカーを使うという点において、指向性が高いのが特徴になります。そのため展示の側において、ごく近距離（かつ壁で区切られている）でしか反応しないようにできます。また、店舗においても入店前に反応してしまったり、隣の店舗にいても反応するといった問題を防げます。&lt;/p&gt;
+
+&lt;p&gt;逆にNFCのようにタッチをするような必要はないので、入店時クーポンやお知らせに使うことができるでしょう。ただし現状はバックグラウンド処理には対応していないので、アプリをフォアグラウンドにしている場合に限って動作する仕組みになります。&lt;/p&gt;
+
+&lt;p&gt;そのため、イベントなどの展示や店舗内での利用が向いているのではないでしょうか。&lt;/p&gt;
+
+&lt;h2&gt;アプリカンならINFOSOUND™が簡単に使えます！&lt;/h2&gt;
+
+&lt;p&gt;アプリカンを使えばiOS/Androidの両プラットフォームに対してINFOSOUND™対応アプリが開発できます。HTML5/JavaScriptを使って行いますので、これまでのWeb制作技術をそのまま活かして新しいO2Oアプリの提案ができるようになるでしょう。ぜひご覧ください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.applican.com/&quot;&gt;アプリカン | アプリ開発支援プラットフォーム&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+        
+        <category term="INFOSOUND" label="INFOSOUND" />
+        
+        <category term="O2O" label="O2O" />
+        
+        <category term="アプリカン" label="アプリカン" />
+        
+
+        <author>
+            <name>moongift</name>
+        </author>
+    </entry>
+    
+  
+    
+    <entry>
+        <title>写真付きブログ投稿アプリを作ってみよう</title>
+        <link href="http://tech-blog.applican.com/entry/2015/04/30/110000"/>
+        <id>hatenablog://entry/8454420450089664824</id>
+        <published>2015-04-30T11:00:00+09:00</published>
+        <updated>2015-04-30T11:00:07+09:00</updated>
+        <summary type="html">みなさん、ブログはお持ちでしょうか。ブログサービスを使っている方もいるかと思いますが、WordPressを使って自分で立てているという方も少なくないでしょう。 今回はそんなWordPressをお使いの方向けに、アプリカンを使ったブログ投稿アプリを作ってみたいと思います。 必要なもの WordPress アプリカンのアカウント（無料） WordPressにプラグインをインストール 今回は外部からWordPressにアクセスしますので、Allow CORS XML-RPCをインストールします。 これはWordPress標準のXML-RPC APIに対して外部からのアクセスを許可するプラグインです。…</summary>
+        <content type="html">&lt;p&gt;みなさん、ブログはお持ちでしょうか。ブログサービスを使っている方もいるかと思いますが、WordPressを使って自分で立てているという方も少なくないでしょう。&lt;/p&gt;
+
+&lt;p&gt;今回はそんなWordPressをお使いの方向けに、アプリカンを使ったブログ投稿アプリを作ってみたいと思います。&lt;/p&gt;
+
+&lt;h2&gt;必要なもの&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;WordPress&lt;/li&gt;
+&lt;li&gt;アプリカンのアカウント（無料）&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;h2&gt;WordPressにプラグインをインストール&lt;/h2&gt;
+
+&lt;p&gt;今回は外部からWordPressにアクセスしますので、Allow CORS XML-RPCをインストールします。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150329/20150329093541.png&quot; alt=&quot;f:id:moongift:20150329093541p:plain&quot; title=&quot;f:id:moongift:20150329093541p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;これはWordPress標準のXML-RPC APIに対して外部からのアクセスを許可するプラグインです。WordPress 4.1.1でも利用できました。&lt;/p&gt;
+
+&lt;h3&gt;アプリカンをダウンロード&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.applican.com/download/zip/sample/web.zip&quot;&gt;アプリカンの基本となるZipファイル&lt;/a&gt;をダウンロード&amp;amp;解凍します。&lt;/p&gt;
+
+&lt;h3&gt;WordPress.jsとmimic.jsのダウンロード&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/developerworks/wordpress-xmlrpc-javascript-api&quot;&gt;wordpress-xmlrpc-javascript-api&lt;/a&gt;のwordpress.jsと、&lt;a href=&quot;http://mimic-xmlrpc.sourceforge.net/&quot;&gt;Mimic - JavaScript XML-RPC Client&lt;/a&gt;からmimic.jsをダウンロードし、javascriptsフォルダ以下に配置します。&lt;/p&gt;
+
+&lt;h3&gt;HTMLファイル修正&lt;/h3&gt;
+
+&lt;p&gt;そしてHTMLファイルを編集します。今回は最低限の編集です。&lt;/p&gt;
+
+&lt;pre class=&quot;code&quot; data-lang=&quot;&quot; data-unlink&gt;&amp;lt;!DOCTYPE html&amp;gt;
+&amp;lt;html&amp;gt;
+  &amp;lt;head&amp;gt;
+    &amp;lt;meta charset=&amp;#34;utf-8&amp;#34;&amp;gt;
+    &amp;lt;meta name=&amp;#34;viewport&amp;#34; content=&amp;#34;initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width&amp;#34;&amp;gt;
+    &amp;lt;title&amp;gt;&amp;lt;/title&amp;gt;
+    &amp;lt;link href=&amp;#34;css/style.css&amp;#34; rel=&amp;#34;stylesheet&amp;#34;&amp;gt;
+  &amp;lt;/head&amp;gt;
+  &amp;lt;body&amp;gt;
+    &amp;lt;form&amp;gt;
+      &amp;lt;input type=&amp;#34;file&amp;#34; name=&amp;#34;file&amp;#34; id=&amp;#34;file&amp;#34; accept=&amp;#34;image/x-png, image/gif, image/jpeg&amp;#34; /&amp;gt;
+      &amp;lt;input type=&amp;#34;hidden&amp;#34; name=&amp;#34;photo&amp;#34; id=&amp;#34;photo&amp;#34; value=&amp;#34;&amp;#34; /&amp;gt;
+      &amp;lt;br /&amp;gt;
+      &amp;lt;input type=&amp;#34;text&amp;#34; value=&amp;#34;テストタイトル&amp;#34; name=&amp;#34;title&amp;#34; size=&amp;#34;30&amp;#34; /&amp;gt;
+      &amp;lt;br /&amp;gt;
+      &amp;lt;textarea name=&amp;#34;body&amp;#34; cols=&amp;#34;30&amp;#34; rows=&amp;#34;6&amp;#34;&amp;gt;テスト&amp;lt;/textarea&amp;gt;
+      &amp;lt;br /&amp;gt;
+      &amp;lt;input type=&amp;#34;submit&amp;#34; name=&amp;#34;submit&amp;#34; value=&amp;#34;送信&amp;#34; /&amp;gt;
+    &amp;lt;/form&amp;gt;
+    &amp;lt;script src=&amp;#34;javascripts/jquery-2.1.3.min.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script src=&amp;#34;javascripts/mimic.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script src=&amp;#34;javascripts/wordpress.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+    &amp;lt;script src=&amp;#34;javascripts/app.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt;
+  &amp;lt;/body&amp;gt;
+&amp;lt;/html&amp;gt;&lt;/pre&gt;
+
+
+&lt;h3&gt;app.jsの作成&lt;/h3&gt;
+
+&lt;p&gt;続いて javascripts/app.js を編集します。今回はapp.coffeeを作成してCoffeeScriptからコンバートしています。&lt;/p&gt;
+
+&lt;pre class=&quot;code&quot; data-lang=&quot;&quot; data-unlink&gt;document.addEventListener(&amp;#34;deviceready&amp;#34;, onDeviceReady, false)
+onDeviceReady = -&amp;gt;
+  # コネクション情報。それぞれ設定してください
+  connection = 
+    url:      &amp;#39;http://サーバのIPアドレス/xmlrpc.php&amp;#39;
+    username: &amp;#39;ユーザ名&amp;#39;
+    password: &amp;#39;パスワード&amp;#39;
+  # WordPressオブジェクトの作成
+  wp = new WordPress(connection.url, connection.username, connection.password)
+  
+  # 写真を選択したら実行
+  # ここではファイルの内容をBase64でデコードするだけです。
+  $(&amp;#34;#file&amp;#34;).on &amp;#34;change&amp;#34;, (e) -&amp;gt;
+    file = e.target.files[0]
+    fr = new FileReader()
+    fr.onload = (e) -&amp;gt;
+      $(&amp;#34;#photo&amp;#34;).val(e.target.result)
+    fr.readAsDataURL(file)
+
+  # 送信時の処理
+  $(&amp;#34;form&amp;#34;).on &amp;#34;submit&amp;#34;, (e) -&amp;gt;
+    e.preventDefault()
+    form = $(e.target)
+    base64 = new Base64(atob(form.find(&amp;#34;#photo&amp;#34;).val().split(&amp;#39;,&amp;#39;)[1]));
+    file_name = $(&amp;#34;#file&amp;#34;)[0].value.replace(/.*\\/, &amp;#34;&amp;#34;)
+    
+    # 写真のアップロードを行います
+    file_hash =
+      name: file_name
+      bits: base64
+      type: &amp;#39;image/png&amp;#39;
+    file = wp.uploadFile(1, file_hash)
+
+    # 写真のアップロードが終わったら、画像のURLを取得します。
+    url = file.url.concat()
+    content = &amp;#34;&amp;lt;img src=&amp;#39;#{url}&amp;#39; /&amp;gt;&amp;lt;br /&amp;gt;#{form.find(&amp;#39;textarea&amp;#39;).val()}&amp;#34;
+    
+    # アップロードした写真を記事本文に追加して記事を投稿します
+    post = wp.newPost 1, 
+      post_title: form.find(&amp;#34;input[name=&amp;#39;title&amp;#39;]&amp;#34;).val()
+      post_content: content.replace(/&amp;amp;/g, &amp;#34;&amp;amp;amp;&amp;#34;).replace(/&amp;#34;/g, &amp;#34;&amp;amp;quot;&amp;#34;).replace(/&amp;lt;/g, &amp;#34;&amp;amp;lt;&amp;#34;).replace(/&amp;gt;/g, &amp;#34;&amp;amp;gt;&amp;#34;);
+      post_status: &amp;#39;publish&amp;#39;
+    alert(&amp;#34;投稿完了しました&amp;#34;)
+onDeviceReady()&lt;/pre&gt;
+
+
+&lt;p&gt;なお処理を見て分かる通り、アップロードの処理を行っているmimic.jsは同期処理を行っています。アップロード処理中はブラウザの動作が固まってしまうのが若干難点です。&lt;/p&gt;
+
+&lt;p&gt;この処理では指定された画像をアップロードし、そのURLを本文に埋め込んで記事投稿しています。post_status（投稿の状態）を公開にして投稿していますので、いきなり公開されます。ここは必要に応じて設定してください。&lt;/p&gt;
+
+&lt;h3&gt;アプリカンでアップロード&lt;/h3&gt;
+
+&lt;p&gt;ファイルの編集が終わったら、フォルダをZip圧縮してweb.zipとして&lt;a href=&quot;https://user.applican.com/&quot;&gt;アプリカンの管理画面&lt;/a&gt;でアップロードします。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150329/20150329093606.png&quot; alt=&quot;f:id:moongift:20150329093606p:plain&quot; title=&quot;f:id:moongift:20150329093606p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;h3&gt;アプリカンシミュレータで確認&lt;/h3&gt;
+
+&lt;p&gt;アップロードが終わったら、アプリカンシミュレータ（&lt;a href=&quot;https://itunes.apple.com/jp/app/applican/id688685999&quot;&gt;iOS&lt;/a&gt;、&lt;a href=&quot;https://play.google.com/store/apps/details?id=com.applican.simulator&quot;&gt;Android&lt;/a&gt;）を使って動作確認を行います。なお、今回のコードはGoogle Chromeなどのデスクトップブラウザでも動作しますのでスマートフォンを実際に使う前に完成が確認できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150329/20150329093617.png&quot; alt=&quot;f:id:moongift:20150329093617p:plain&quot; title=&quot;f:id:moongift:20150329093617p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;記事投稿が完了するとアラートが出て、WordPressに記事が投稿されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150329/20150329093641.png&quot; alt=&quot;f:id:moongift:20150329093641p:plain&quot; title=&quot;f:id:moongift:20150329093641p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;今回はブログの閲覧ではなく、運営側にとって必要になる機能をアプリカンを使ってスマートフォンアプリとして実現してみました。XML-RPCを使えばWordPressで運用上必要な機能はほぼ実現できますので、通常のWordPressクライアントとは違う、自分たちのワークフローに合わせた形に仕上げられるでしょう。&lt;/p&gt;
+
+&lt;p&gt;ぜひアプリカンと一緒にお試しください！&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.applican.com/&quot;&gt;アプリカン | アプリ開発支援プラットフォーム&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+        
+        <category term="API" label="API" />
+        
+        <category term="WordPress" label="WordPress" />
+        
+        <category term="JavaScript" label="JavaScript" />
+        
+        <category term="アプリカン" label="アプリカン" />
+        
+        <category term="開発" label="開発" />
+        
+
+        <author>
+            <name>moongift</name>
+        </author>
+    </entry>
+    
+  
+    
+    <entry>
+        <title>ハイブリッドアプリ開発を誰が使うべきか！？</title>
+        <link href="http://tech-blog.applican.com/entry/2015/04/15/100000"/>
+        <id>hatenablog://entry/8454420450089638351</id>
+        <published>2015-04-15T10:00:00+09:00</published>
+        <updated>2015-04-15T10:00:06+09:00</updated>
+        <summary type="html">これまで何回かに分けて紹介してきたハイブリッドアプリについてですが、では実際にハイブリッドアプリを使うのはどういった方たちにお勧めなのでしょうか。私たちはWeb制作会社、Webシステム開発会社、フロントエンドエンジニアの方にこそお勧めだと考えています。 Web制作会社の方 ハイブリッドアプリが使っている技術はHTML5/JavaScript/スタイルシートなどになります。これはWeb制作会社の方がこれまで使ってきた技術そのままです。WordPressのサイトをデザインするようにアプリのデザインを決め、HTML5/JavaScript/スタイルシートでプロトタイプの作成から実際のアプリ開発まで行…</summary>
+        <content type="html">&lt;p&gt;これまで何回かに分けて紹介してきたハイブリッドアプリについてですが、では実際にハイブリッドアプリを使うのはどういった方たちにお勧めなのでしょうか。私たちはWeb制作会社、Webシステム開発会社、フロントエンドエンジニアの方にこそお勧めだと考えています。&lt;/p&gt;
+
+&lt;h2&gt;Web制作会社の方&lt;/h2&gt;
+
+&lt;p&gt;ハイブリッドアプリが使っている技術はHTML5/JavaScript/スタイルシートなどになります。これはWeb制作会社の方がこれまで使ってきた技術そのままです。WordPressのサイトをデザインするようにアプリのデザインを決め、HTML5/JavaScript/スタイルシートでプロトタイプの作成から実際のアプリ開発まで行えるようになります。&lt;/p&gt;
+
+&lt;p&gt;技術要件としても、&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;HTML5&lt;/li&gt;
+&lt;li&gt;JavaScript/jQuery&lt;/li&gt;
+&lt;li&gt;CSS3&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;といった具合に従来のWebサイト制作で培ってきたナレッジがそのまま活かせます。WordPressで作ったメディアサイト、Eコマースサイトをアプリ化するのはいかがでしょうか。&lt;/p&gt;
+
+&lt;h2&gt;Webシステム開発会社&lt;/h2&gt;
+
+&lt;p&gt;クライアント向けにWebシステムを開発している企業にとってもHTML5/JavaScript/スタイルシートといった既存技術の組み合わせはお勧めです。要員のアサインも容易で、Webシステムとアプリの両面を担当できます。Webシステム側でWeb APIの仕組みを持てば、アプリとの連携も容易になります。&lt;/p&gt;
+
+&lt;p&gt;さらに私たちの提供する&lt;a href=&quot;http://www.applican.com/&quot;&gt;アプリカン&lt;/a&gt;では&lt;a href=&quot;http://doc.applican.com/Beacon/index.html&quot;&gt;iBeacon/ビーコン API&lt;/a&gt;を提供しており、設定ファイルを変更するだけでiBeaconが利用できるようになります。O2Oマーケティングにおいて注目の機能だけに、素早く容易に実装できるのは魅力的ではないでしょうか。また、プッシュ通知やバーコードリーダー、アプリ内課金などアプリならではの機能も利用できるようになっています。&lt;/p&gt;
+
+&lt;h2&gt;フロントエンドエンジニア&lt;/h2&gt;
+
+&lt;p&gt;フロントエンドエンジニアの方はまさにハイブリッドアプリの開発者としてお勧めです。Webサイトを組み上げるのと同じような感覚でiOS/Androidアプリが開発できます。ネイティブの言語は使いませんので、これまでのスキルセットでアプリ開発が行えます。WebViewも高性能化していますので、ちょっとしたアプリであればHTML5/JavaScriptで十分実現可能になっています。&lt;/p&gt;
+
+&lt;p&gt;ハイブリッドアプリは一つの言語（HTML5/JavaScript）で複数のプラットフォームに出せるのが大きな特徴になります。ぜひその特徴を活用し、Webとアプリ両方を作ってみてはいかがでしょうか。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;ハイブリッドアプリの利点としては、&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;現在のスキルセット&lt;/li&gt;
+&lt;li&gt;Webサイト（Webシステム）構築と変わらない手法&lt;/li&gt;
+&lt;li&gt;マルチプラットフォーム&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;に開発できるということです。Webとスマートフォンアプリで分けて考えるのではなく、ハイブリッドアプリによる実装を検討してみてください！&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.applican.com/&quot;&gt;アプリカン | アプリ開発支援プラットフォーム&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+        
+        <category term="iBeacon" label="iBeacon" />
+        
+        <category term="JavaScript" label="JavaScript" />
+        
+        <category term="jQuery" label="jQuery" />
+        
+        <category term="アプリ" label="アプリ" />
+        
+        <category term="アプリカン" label="アプリカン" />
+        
+
+        <author>
+            <name>moongift</name>
+        </author>
+    </entry>
+    
+  
+    
+    <entry>
+        <title>iBeacon/ビーコンとは何か？</title>
+        <link href="http://tech-blog.applican.com/entry/2015/04/03/101534"/>
+        <id>hatenablog://entry/8454420450087872039</id>
+        <published>2015-04-03T10:15:34+09:00</published>
+        <updated>2015-04-03T10:15:34+09:00</updated>
+        <summary type="html">iOS7で発表されて以来注目を集めているのがiBeacon（ビーコン。以下iBeacon）です。O2Oで使える、BLE（Bluetooth Low Energy）を使うといった要素についてはよく言われていますが、実際のところどういった仕組みなのでしょうか。 こんなそんなiBeaconについて解説します。 そもそもビーコン（Beacon）とは？ Beaconというのは日本語で言うと灯台やのろしを意味します。つまりあるポイントにあって、そこから目印になる情報（灯台であれば光、のろしであれば煙）を発信し続ける存在です。その情報そのものには大きな意味はなく、それを受け取った側で判別し利用します。 iB…</summary>
+        <content type="html">&lt;p&gt;iOS7で発表されて以来注目を集めているのがiBeacon（ビーコン。以下iBeacon）です。O2Oで使える、BLE（Bluetooth Low Energy）を使うといった要素についてはよく言われていますが、実際のところどういった仕組みなのでしょうか。&lt;/p&gt;
+
+&lt;p&gt;こんなそんなiBeaconについて解説します。&lt;/p&gt;
+
+&lt;h2&gt;そもそもビーコン（Beacon）とは？&lt;/h2&gt;
+
+&lt;p&gt;Beaconというのは日本語で言うと灯台やのろしを意味します。つまりあるポイントにあって、そこから目印になる情報（灯台であれば光、のろしであれば煙）を発信し続ける存在です。その情報そのものには大きな意味はなく、それを受け取った側で判別し利用します。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150312/20150312125603.png&quot; alt=&quot;f:id:moongift:20150312125603p:plain&quot; title=&quot;f:id:moongift:20150312125603p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;h2&gt;iBeaconの構成要素&lt;/h2&gt;
+
+&lt;p&gt;iBeaconは2つの要素で構成されます。一つがビーコンデバイス、もう一つがスマートフォン/タブレットです。ビーコンデバイスはBluetoothで発信を続けています。それをスマートフォンやタブレットで受け取ることで近くにビーコンデバイスがあるというのを検知し、通知を出す仕組みになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150312/20150312125619.png&quot; alt=&quot;f:id:moongift:20150312125619p:plain&quot; title=&quot;f:id:moongift:20150312125619p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;h2&gt;肝はBLE（Bluetooth Low Energy）&lt;/h2&gt;
+
+&lt;p&gt;BLE（Bluetooth Low Energy）というのは低消費電力型のBluetoothになります。ビーコンデバイスは常時情報を発信しますのでバッテリーを消費します。しかしBLEによってボタン型の小さな電池であっても1年くらいは保つようになっています。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20140216/20140216185912.jpg&quot; alt=&quot;f:id:moongift:20140216185912j:plain&quot; title=&quot;f:id:moongift:20140216185912j:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;上の画像は&lt;a href=&quot;http://estimote.com/&quot;&gt;Estimote Beacons&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そしてiBeacon自体はビーコンデバイスとスマートフォンで相互通信することはありません。ビーコンデバイスはただ発信を続けるだけで、それを受け取って処理を行うのはスマートフォン側になります。そのためビーコンデバイスの仕組みがシンプルになり、消費電力を抑えることができるようになっています。&lt;/p&gt;
+
+&lt;h2&gt;スマートフォン側の必須要件は？&lt;/h2&gt;
+
+&lt;p&gt;処理を行う側のスマートフォン側では、まずBluetoothがオンになっていなければiBeaconは検知できません。BLEを使っているとは言え、多少なりとも消費電力が発生してしまうBluetoothは全く使っていないユーザはオフにしている可能性があります。オフになっているとiBeaconは使えませんのでご注意ください。&lt;/p&gt;
+
+&lt;p&gt;さらにBluetoothの中でもBLE（Bluetooth Low Energy）に対応している必要があります。iPhoneで言えばiPhone 4s以降が対応機種になります。Androidについては機種によって異なりますが、BLE APIはAndroid 4.3以降が対応していますので、少なくともAndroid 4.3以降の端末が対象になります。&lt;/p&gt;
+
+&lt;p&gt;また、Bluetooth機器は世の中に無数あり、iBeaconのような使い方ではなくマウスやキーボード、カメラと接続したりするのにも使われます。その際には機器を特定するUUIDが必要になります。iBeaconにおいても同様で、常にどんなビーコンデバイスでも検知する訳ではありません。どのUUIDを検知するか指定する必要があります。&lt;/p&gt;
+
+&lt;p&gt;つまりスマートフォンアプリを作り、アプリの中で検知するUUIDを指定する必要があります。&lt;/p&gt;
+
+&lt;h2&gt;ビーコンデバイスの発信する情報&lt;/h2&gt;
+
+&lt;p&gt;ビーコンデバイスが発信する情報はシンプルで、&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;UUID&lt;/li&gt;
+&lt;li&gt;major&lt;/li&gt;
+&lt;li&gt;minor&lt;/li&gt;
+&lt;/ul&gt;
+
+
+&lt;p&gt;の3つになります。UUIDは法人や団体などの組織単位で割り当てるコードになります。majorはグルーピングの一つで、モールや会場単位で割り当てるのを想定しています。minorはmajorの下位のグルーピングで、個々の店舗や会場内のポイントごとに設定するイメージになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;span itemscope itemtype=&quot;http://schema.org/Photograph&quot;&gt;&lt;img src=&quot;http://cdn-ak.f.st-hatena.com/images/fotolife/m/moongift/20150312/20150312125722.png&quot; alt=&quot;f:id:moongift:20150312125722p:plain&quot; title=&quot;f:id:moongift:20150312125722p:plain&quot; class=&quot;hatena-fotolife&quot; itemprop=&quot;image&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;スマートフォンなどが受信するビーコンの情報において、major/minorを含めるかどうかは任意になります。また、スマートフォン側では送信されている信号の強度によって、ビーコンデバイスとの距離を測定できるようになっています。&lt;/p&gt;
+
+&lt;h2&gt;位置情報との違いは？&lt;/h2&gt;
+
+&lt;p&gt;GPSなどを使った位置情報測定とiBeaconは同じようにスマートフォンの場所を検知する技術になります。iPhoneアプリにおいてもどちらも「位置情報を利用しますが宜しいですか？」という確認ダイアログが出ます。&lt;/p&gt;
+
+&lt;p&gt;しかしGPSは地球上における一点のポイントを特定するのに対して、iBeaconの場合はビーコンデバイスからの距離を特定します。距離なので一点ではなく、円周ということです。また、一つの場所を特定するのではなく、ビーコンデバイスからの相対距離になります。&lt;/p&gt;
+
+&lt;p&gt;GPSは衛星からの情報を使って三角測量で場所を特定します。そのため屋内において位置情報の測定や誤差が大きいという問題があります。対してiBeaconの場合、屋内でも利用できるという強みがあります。通知や処理を行う距離をごく短くすれば、博物館などで展示物ごとに案内を出すこともできるでしょう。また、iBeaconの最大距離は50mと言われており、歩いて一分程度の距離にいる人に対してクーポンを提示したり、何らかの情報発信ができるようになります。このような仕組みをGPSで実現しようとした場合、位置情報の定常的な監視が必要になります。これはバッテリー消費が大きくなります。&lt;/p&gt;
+
+&lt;h2&gt;iBeaconはネットワーク不要&lt;/h2&gt;
+
+&lt;p&gt;iBeaconは通知を行うまでの処理においてサーバと通信が発生しません。ビーコンデバイス自体も単にBLEの情報を発信するだけでサーバと通信する訳ではありません。そのため通知する内容などは予めアプリ側に仕込んでおく必要があります。&lt;/p&gt;
+
+&lt;p&gt;ただしiOS7.1以降ではビーコンデバイスを検知した後、10秒程度処理ができるようになっています。その間においてサーバに情報を送ったり、逆に受け取ると言ったことも可能です（ネットワーク状態の保証はないのでお勧めしませんが）。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2&gt;iBeaconやるならアプリカン！&lt;/h2&gt;
+
+&lt;p&gt;iBeaconをアプリに実装する上では意外と面倒な処理が多いです。強度によって処理を分ける必要もあります。そこで私たちの開発しているアプリカンの利用をお勧めします。アプリカンではXMLファイルに設定を書くだけでiOS/Android両方に対応したiBeaconが簡単に使えるようになります。&lt;/p&gt;
+
+&lt;p&gt;面倒な処理を考えることなくiBeaconの良さだけをさくっと使えるアプリカン、どうぞお試しください！&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.applican.com/&quot;&gt;アプリカン | アプリ開発支援プラットフォーム&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+        
+        <category term="iBeacon" label="iBeacon" />
+        
+        <category term="アプリカン" label="アプリカン" />
+        
+        <category term="ビーコン" label="ビーコン" />
+        
+        <category term="位置情報" label="位置情報" />
+        
+
+        <author>
+            <name>moongift</name>
+        </author>
+    </entry>
+    
+  
+    
+    <entry>
+        <title>HTML5でアプリを作るハイブリッドアプリの利点とは？（3）</title>
+        <link href="http://tech-blog.applican.com/entry/2015/04/01/100000"/>
+        <id>hatenablog://entry/8454420450087872180</id>
+        <published>2015-04-01T10:00:00+09:00</published>
+        <updated>2015-04-01T10:00:18+09:00</updated>
+        <summary type="html">初回は開発者視点、前回はマネージメント層の視点でハイブリッドアプリの利点を紹介しました。今回はあまり知られていませんが、ハイブリッドアプリならではのコンテンツ差し替えについて紹介します。 一般的なネイティブアプリの場合 ネイティブアプリはこれまでに紹介している通り、1から10までネイティブなプログラミング言語で作られています。iOSのObjective-C/SwiftやAndroidのJavaはいずれもコンパイル言語で、書いたプログラミングコードをコンパイルして一つのアプリにしています。 コンパイルされていますので予め書かれている動作のみ可能となっています。そのため高速に動作することが可能です…</summary>
+        <content type="html">&lt;p&gt;初回は開発者視点、前回はマネージメント層の視点でハイブリッドアプリの利点を紹介しました。今回はあまり知られていませんが、ハイブリッドアプリならではのコンテンツ差し替えについて紹介します。&lt;/p&gt;
+
+&lt;h2&gt;一般的なネイティブアプリの場合&lt;/h2&gt;
+
+&lt;p&gt;ネイティブアプリはこれまでに紹介している通り、1から10までネイティブなプログラミング言語で作られています。iOSのObjective-C/SwiftやAndroidのJavaはいずれもコンパイル言語で、書いたプログラミングコードをコンパイルして一つのアプリにしています。&lt;/p&gt;
+
+&lt;p&gt;コンパイルされていますので予め書かれている動作のみ可能となっています。そのため高速に動作することが可能です。&lt;/p&gt;
+
+&lt;h2&gt;ハイブリッドアプリの場合&lt;/h2&gt;
+
+&lt;p&gt;対してハイブリッドアプリの場合、WebViewに備わっているJavaScriptエンジンやレンダリングエンジンを使ってダイナミックに処理を行います。JavaScriptはスクリプト言語であり、コンパイルは不要です。実行時にその場で処理を行います。そのため、コンパイル系のプログラミング言語に比べて多少遅いのが一般的で、かつiOS/Androidのネイティブ実行環境ではない、WebView上のJavaScript実行エンジンを使って実行されるので処理に時間がかかります。&lt;/p&gt;
+
+&lt;h2&gt;コンテンツを差し替えるとは？&lt;/h2&gt;
+
+&lt;p&gt;Webサイトなどでは読み込んでいるJavaScriptファイルを差し替えて再実行するとすぐに処理を変えることができます。例えばハイブリッドアプリの中から外部サーバ上にあるJavaScriptファイルを読み込んでいる場合、アプリの外からアプリの処理内容を変更できるようになるというわけです。&lt;/p&gt;
+
+&lt;p&gt;JavaScriptに限らず、スタイルシートや画像なども外部ファイルを参照していればアプリ外からの操作が可能になります。しかしこの方法ではオフライン時では使えませんし、表示もネットワークを使う分、重たくなってしまいます。&lt;/p&gt;
+
+&lt;h2&gt;そこでダウンロード&amp;amp;差し替え&lt;/h2&gt;
+
+&lt;p&gt;そこで使えるのがファイルをダウンロードした上でのコンテンツ差し替えです。私たちの提供するアプリカンでは作成したアプリのソースコード（HTML5/JavaScript/スタイルシート/画像など）をまとめて圧縮してweb.zipという形で保存しています。アプリを起動した際にはこのweb.zipを解凍し、表示を行っています。&lt;/p&gt;
+
+&lt;p&gt;そしてソースコードを編集して管理画面上からアップロードすると、次にアプリを起動した時にweb.zipのアップデートを感知し、自動でダウンロードを行います。ダウンロード完了後はweb.zipを差し替えて新しい表示になります。&lt;/p&gt;
+
+&lt;h2&gt;差し替えの利点&lt;/h2&gt;
+
+&lt;p&gt;最も大きな利点としては、アプリの審査を通さずにコンテンツの差し替えが可能ということです。一般的にアプリの内容をちょっとでも変更した場合、AppleやGoogleの審査が必要になります。Googleは早いですが、Appleの審査は厳しく、1週間〜2週間、さらに審査でリジェクト（審査落ち）すればさらに修正して再度審査を行う必要があります。&lt;/p&gt;
+
+&lt;p&gt;これは緊急のバグが発見された場合に大きな問題になります。一応Appleは特急審査という道を用意してくれていますが、利用回数に限度があったり、理由が適切でないと通常の審査に回されてしまいます。&lt;/p&gt;
+
+&lt;p&gt;動的なコンテンツ差し替えの場合はアプリの審査は不要で、すぐに変更が反映できるようになります。かつ、ファイルをダウンロードした上で差し替えますのでオフラインでも継続して利用が可能です。緊急性の高い問題があった際に、すぐに修正して反映できるのは魅力的です。&lt;/p&gt;
+
+&lt;h2&gt;差し替えの問題点&lt;/h2&gt;
+
+&lt;p&gt;審査を通さないリリースになりますのであまり大きな変更は控えるべきでしょう。アプリの内容全体が差し替えられますので、全く別なアプリにすることさえ可能です。しかしそういった使い方はユーザの信頼を損ないますし、それによって利用が伸びるとは思えませんので控えましょう。&lt;/p&gt;
+
+&lt;p&gt;また、ネイティブの機能を使う系統のアップデートについてはHTML5/JavaScript部分の差し替えだけで対応できないことがあります。例えばアプリカンにおいてはバージョン1.10.0からビーコンAPIを提供していますが、こういった機能はネイティブのAPIに絡んでいるため再審査が必要になります。iOSエンジンのバージョン1.11.0における64bit対応も同様です。JavaScriptだけでできる部分は再審査が不要ですが、ハードウェアの機能が絡んだ場合はコンパイルし直した上で再審査が必要になります。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;コンテンツの差し替えはハイブリッドアプリならではの機能と言えます。使いこなせばこれまでのWebシステム開発と同様に高速な開発サイクルが回せるようになるはずです。アプリカンでは標準でコンテンツ差し替え機能を提供していますので、ぜひお試しください！&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.applican.com/&quot;&gt;アプリカン | アプリ開発支援プラットフォーム&lt;/a&gt;&lt;/p&gt;
+</content>
+        
+        
+        <category term="アプリカン" label="アプリカン" />
+        
+        <category term="アプリ" label="アプリ" />
+        
+        <category term="iOS" label="iOS" />
+        
+        <category term="Android" label="Android" />
+        
+
+        <author>
+            <name>moongift</name>
+        </author>
+    </entry>
+    
+  
+</feed>
